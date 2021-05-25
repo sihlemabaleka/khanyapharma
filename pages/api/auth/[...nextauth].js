@@ -12,10 +12,10 @@ const options = {
           password: process.env.EMAIL_SERVER_PASSWORD
         }
       },
-      from: process.env.EMAIL_FROM,
+      from: process.env.EMAIL_FROM
     })
   ],
   database: process.env.DATABASE_URI
-}
+};
 
 export default (req, res) => NextAuth(req, res, options);
