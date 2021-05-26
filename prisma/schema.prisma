@@ -1,0 +1,81 @@
+datasource db {
+    provider = "sqlite"
+    url      = process.env.SQLITE_STORAGE_LOCATION
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Staff {
+    id              Int    @id @default(autoincrement())
+    first_name      String
+    last_name       String
+    identity_number String
+    Sale            Sale[]
+}
+
+model Customer {
+    id              Int    @id @default(autoincrement())
+    first_name      String
+    last_name       String
+    identity_number String
+    Sale            Sale[]
+}
+
+model Outlet {
+    id      Int    @id @default(autoincrement())
+    name    String
+    contact String
+    Sale    Sale[]
+}
+
+model Payment {
+    id                Int             @id @default(autoincrement())
+    name              String
+    contact           String
+    payment_method    PaymentMethod? @relation(fields: [payment_method_id], references: [id])
+    payment_method_id Int?
+    Sale              Sale[]
+}
+
+model PaymentMethod {
+    id          Int        @id @default(autoincrement())
+    name        String
+    description String
+    Payments    Payment[]
+}
+
+model Product {
+    id                          Int     @id @default(autoincrement())
+    transaction_date_time       String
+    transaction_wholesale_price String
+    transaction_retail_price    String
+    name                        String
+    description                 String
+    Carts                       Cart[]
+}
+
+model Cart {
+    id            Int       @id @default(autoincrement())
+    transaction   Sale?     @relation(fields: [transactionId], references: [id])
+    transactionId Int?
+    product       Product? @relation(fields: [productId], references: [id])
+    productId     Int?
+}
+
+model Sale {
+    id                          Int        @id @default(autoincrement())
+    customer                    Customer? @relation(fields: [customerId], references: [id])
+    outlet                      Outlet?   @relation(fields: [outletId], references: [id])
+    staff                       Staff?     @relation(fields: [staffId], references: [id])
+    customerId                  Int?
+    outletId                    Int?
+    staffId                     Int?
+    transaction_date_time       String
+    transaction_wholesale_price String
+    transaction_retail_price    String
+    payment                     Payment?  @relation(fields: [paymentId], references: [id])
+    paymentId                   Int?
+    Carts                       Cart[]
+}
